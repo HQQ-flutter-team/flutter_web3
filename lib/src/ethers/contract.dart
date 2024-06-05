@@ -29,8 +29,7 @@ class Contract extends Interop<_ContractImpl> {
   }
 
   /// Instantiate [Contract] from [provider] for read-only contract calls.
-  factory Contract.fromProvider(
-          String address, dynamic abi, Provider provider) =>
+  factory Contract.fromProvider(String address, dynamic abi, Provider provider) =>
       Contract._(_ContractImpl(address, abi, provider.impl));
 
   /// Instantiate [Contract] from [provider] for read-write contract calls.
@@ -44,8 +43,7 @@ class Contract extends Interop<_ContractImpl> {
 
   /// If the [Contract] object is the result of a `ContractFactory` deployment, this is the transaction which was used to deploy the contract.
   Future<TransactionResponse> get deployTransaction async =>
-      TransactionResponse._(
-          await _get<_TransactionResponseImpl>('deployTransaction'));
+      TransactionResponse._(await _get<_TransactionResponseImpl>('deployTransaction'));
 
   /// This is the ABI as an [Interface].
   Interface get interface => impl.interface;
@@ -69,8 +67,7 @@ class Contract extends Interop<_ContractImpl> {
   /// A constant method is read-only and evaluates a small amount of EVM code against the current blockchain state and can be computed by asking a single node, which can return a result.
   ///
   /// It is therefore free and does not require any ether, but cannot make changes to the blockchain state.
-  Future<T> call<T>(String method, [List<dynamic> args = const []]) =>
-      _call<T>(method, args);
+  Future<T> call<T>(String method, [List<dynamic> args = const []]) => _call<T>(method, args);
 
   ///Returns a new instance of the [Contract], but connected to [Provider] or [Signer].
   ///
@@ -93,12 +90,9 @@ class Contract extends Interop<_ContractImpl> {
   ///
   /// The `override` are identical to the overrides above for read-only or write methods, depending on the type of call of `method`.
   Future<BigInt> estimateGas(String method,
-          [List<dynamic> args = const [],
-          TransactionOverride? override]) async =>
+          [List<dynamic> args = const [], TransactionOverride? override]) async =>
       (await promiseToFuture<BigNumber>(callMethod(
-              getProperty(impl, 'estimateGas'),
-              method,
-              override != null ? [...args, override.impl] : args)))
+              getProperty(impl, 'estimateGas'), method, override != null ? [...args, override.impl] : args)))
           .toBigInt;
 
   /// Return a filter for [eventName], optionally filtering by additional [args] constraints.
@@ -108,18 +102,15 @@ class Contract extends Interop<_ContractImpl> {
       Filter._(callMethod(getProperty(impl, 'filters'), eventName, args));
 
   /// Returns the number of listeners for the [event]. If no [event] is provided, the total number of listeners is returned.
-  int listenerCount([dynamic event]) =>
-      impl.listenerCount(event is EventFilter ? event.impl : event);
+  int listenerCount([dynamic event]) => impl.listenerCount(event is EventFilter ? event.impl : event);
 
   /// Returns the list of Listeners for the [event].
-  List listeners(Object event) =>
-      impl.listeners(event is EventFilter ? event.impl : event);
+  List listeners(Object event) => impl.listeners(event is EventFilter ? event.impl : event);
 
   /// Multicall read-only constant [method] with [args]. `May not` be at the same block.
   ///
   /// If [eagerError] is `true`, returns the error immediately on the first error found.
-  Future<List<T>> multicall<T>(String method, List<List<dynamic>> args,
-          [bool eagerError = false]) =>
+  Future<List<T>> multicall<T>(String method, List<List<dynamic>> args, [bool eagerError = false]) =>
       Future.wait(
           Iterable<int>.generate(args.length).map(
             (e) => _call<T>(method, args[e]),
@@ -131,24 +122,20 @@ class Contract extends Interop<_ContractImpl> {
         impl,
         'off',
         listener != null
-            ? [
-                event is EventFilter ? event.impl : event,
-                allowInterop(listener)
-              ]
+            ? [event is EventFilter ? event.impl : event, allowInterop(listener)]
             : [event is EventFilter ? event.impl : event],
       );
 
   /// Add a [listener] to be triggered for each [event].
-  on(dynamic event, Function listener) => callMethod(impl, 'on',
-      [event is EventFilter ? event.impl : event, allowInterop(listener)]);
+  on(dynamic event, Function listener) =>
+      callMethod(impl, 'on', [event is EventFilter ? event.impl : event, allowInterop(listener)]);
 
   /// Add a [listener] to be triggered for only the next [event], at which time it will be removed.
-  once(dynamic event, Function listener) => callMethod(impl, 'once',
-      [event is EventFilter ? event.impl : event, allowInterop(listener)]);
+  once(dynamic event, Function listener) =>
+      callMethod(impl, 'once', [event is EventFilter ? event.impl : event, allowInterop(listener)]);
 
   /// Return a List of [Log] that have been emitted by the Contract by the [filter]. Optinally constraint from [startBlock] to [endBlock].
-  Future<List<Event>> queryFilter(EventFilter filter,
-          [dynamic startBlock, dynamic endBlock]) async =>
+  Future<List<Event>> queryFilter(EventFilter filter, [dynamic startBlock, dynamic endBlock]) async =>
       (await _call<List>(
         'queryFilter',
         [
@@ -157,13 +144,11 @@ class Contract extends Interop<_ContractImpl> {
           endBlock,
         ]..removeWhere((e) => e == null),
       ))
-          .cast<_EventImpl>()
-          .map((e) => Event._(e))
+          .map((e) => Event(e))
           .toList();
 
   /// Remove all the listeners for the [event]. If no [event] is provided, all events are removed.
-  removeAllListeners([dynamic event]) =>
-      impl.removeAllListeners(event is EventFilter ? event.impl : event);
+  removeAllListeners([dynamic event]) => impl.removeAllListeners(event is EventFilter ? event.impl : event);
 
   /// Send write [method] with [args], [override] may be include to send the Ether or adjust transaction options.
   ///
@@ -175,14 +160,12 @@ class Contract extends Interop<_ContractImpl> {
   ///
   /// It cannot return a result. If a result is required, it should be logged using a Solidity event (or EVM log), which can then be queried from the transaction receipt.
   Future<TransactionResponse> send(String method,
-          [List<dynamic> args = const [],
-          TransactionOverride? override]) async =>
-      TransactionResponse._(await _call<_TransactionResponseImpl>(
-          method, override != null ? [...args, override.impl] : args));
+          [List<dynamic> args = const [], TransactionOverride? override]) async =>
+      TransactionResponse._(
+          await _call<_TransactionResponseImpl>(method, override != null ? [...args, override.impl] : args));
 
   @override
-  String toString() =>
-      'Contract: $address connected to ${isReadOnly ? 'provider' : 'signer'}';
+  String toString() => 'Contract: $address connected to ${isReadOnly ? 'provider' : 'signer'}';
 
   Future<T> _call<T>(String method, [List<dynamic> args = const []]) async {
     try {

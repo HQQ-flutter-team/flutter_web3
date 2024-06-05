@@ -60,15 +60,15 @@ class _EventFilterImpl {
   external set topics(List<dynamic>? topics);
 }
 
-@JS()
-@anonymous
-class _EventImpl extends _LogImpl {
-  external String event;
+// @JS()
+// @anonymous
+// class _EventImpl extends _LogImpl {
+//   external String event;
 
-  external String eventSignature;
+//   external String eventSignature;
 
-  external List<dynamic> args;
-}
+//   external List<dynamic> args;
+// }
 
 @JS()
 @anonymous
@@ -134,29 +134,29 @@ class _JsonRpcProviderImpl extends _ProviderImpl {
   external _JsonRpcProviderImpl([String? rpcUrl]);
 }
 
-@JS()
-@anonymous
-class _LogImpl {
-  external String get address;
+// @JS()
+// @anonymous
+// class _LogImpl {
+//   external String get address;
 
-  external String get blockHash;
+//   external String get blockHash;
 
-  external int get blockNumber;
+//   external int get blockNumber;
 
-  external String get data;
+//   external String get data;
 
-  external String get logIndex;
+//   external String get logIndex;
 
-  external bool get removed;
+//   external bool get removed;
 
-  external List<dynamic> get topics;
+//   external List<dynamic> get topics;
 
-  external String get transactionHash;
+//   external String get transactionHash;
 
-  external String get transactionIndex;
+//   external String get transactionIndex;
 
-  external int get transactionLogIndex;
-}
+//   external int get transactionLogIndex;
+// }
 
 @JS()
 class _MnemonicImpl {

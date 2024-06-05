@@ -3,6 +3,7 @@ library ethers;
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
+import 'dart:js_interop' hide JS;
 
 import './exception.dart';
 import '../ethereum/ethereum.dart';
@@ -30,8 +31,7 @@ part 'wallet.dart';
 AbiCoder get abiCoder => EthUtils.defaultAbiCoder;
 
 /// Getter for default Web3Provider object.
-Web3Provider? get provider =>
-    Ethereum.isSupported ? Web3Provider(Ethereum.provider) : null;
+Web3Provider? get provider => Ethereum.isSupported ? Web3Provider(Ethereum.provider) : null;
 
 /// The AbiCoder is a collection of Coders which can be used to encode and decode the binary data formats used to interoperate between the EVM and higher level libraries.
 ///
@@ -195,8 +195,7 @@ class EthUtils {
   /// utils.solidityKeccak256([ "int16", "uint48" ], [ -1, 12 ])
   /// // '0x81da7abb5c9c7515f57dab2fc946f01217ab52f3bd8958bc36bd55894451a93c'
   /// ```
-  external static String solidityKeccak256(
-      List<String> types, List<dynamic> values);
+  external static String solidityKeccak256(List<String> types, List<dynamic> values);
 
   /// Returns the non-standard encoded [values] packed according to their respective type in [types].
   ///
@@ -219,8 +218,7 @@ class EthUtils {
   /// utils.soliditySha256([ "int16", "uint48" ], [ -1, 12 ])
   /// // '0xa5580fb602f6e2ba9c588011dc4e6c2335e0f5d970dc45869db8f217efc6911a'
   /// ```
-  external static String soliditySha256(
-      List<String> types, List<dynamic> values);
+  external static String soliditySha256(List<String> types, List<dynamic> values);
 
   /// Returns the address that signed [message] producing [signature].
   ///

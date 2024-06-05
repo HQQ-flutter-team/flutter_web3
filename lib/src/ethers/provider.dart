@@ -32,8 +32,7 @@ class JsonRpcProvider extends Provider<_JsonRpcProviderImpl> {
 
   /// Returns a list of all account addresses managed by [this] provider.
   Future<List<String>> listAccounts() async =>
-      (await promiseToFuture<List>(callMethod(impl, 'listAccounts', [])))
-          .cast<String>();
+      (await promiseToFuture<List>(callMethod(impl, 'listAccounts', []))).cast<String>();
 
   @override
   String toString() => 'JsonRpcProvider: $rpcUrl';
@@ -48,8 +47,7 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   /// Returns a Future which will stall until the [Network] has heen established, ignoring errors due to the target node not being active yet.
   ///
   /// This can be used for testing or attaching scripts to wait until the node is up and running smoothly.
-  Future<Network> get ready async =>
-      Network._(await call<_NetworkImpl>('ready'));
+  Future<Network> get ready async => Network._(await call<_NetworkImpl>('ready'));
 
   /// Call Ethers provider [method] with [args].
   ///
@@ -109,8 +107,7 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   /// print(block.transaction.first);
   /// // 0x99598d22288ba2ed229cf965a7e0279a8df3d61d48f779d2ce5e3ab84788c10c
   /// ```
-  Future<Block> getBlock(int blockNumber) async =>
-      Block._(await call<_BlockImpl>('getBlock', [blockNumber]));
+  Future<Block> getBlock(int blockNumber) async => Block._(await call<_BlockImpl>('getBlock', [blockNumber]));
 
   /// Returns the block number (or height) of the most recently mined block.
   Future<int> getBlockNumber() => call<int>('getBlockNumber');
@@ -128,8 +125,7 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   /// // Transaction: 0x99598d22 from 0xC5D2A96c with value 39090000000000000000 and data 0x7ff36ab500000...
   /// print(block.transactions.first is TransactionResponse); // true
   /// ```
-  Future<BlockWithTransaction> getBlockWithTransaction(int blockNumber) async =>
-      BlockWithTransaction._(
+  Future<BlockWithTransaction> getBlockWithTransaction(int blockNumber) async => BlockWithTransaction._(
         await call<_BlockWithTransactionImpl>(
           'getBlockWithTransactions',
           [blockNumber],
@@ -137,28 +133,25 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
       );
 
   /// Returns the contract code of [address] as of the [blockTag] block height. If there is no contract currently deployed, the result is `0x`.
-  Future<String> getCode(String address, [dynamic blockTag]) => call<String>(
-      'getCode', blockTag == null ? [address] : [address, blockTag]);
+  Future<String> getCode(String address, [dynamic blockTag]) =>
+      call<String>('getCode', blockTag == null ? [address] : [address, blockTag]);
 
   /// Returns the current recommended [FeeData] to use in a transaction.
   ///
   /// For an `EIP-1559` transaction, the [FeeData.maxFeePerGas] and [FeeData.maxPriorityFeePerGas] should be used.
   ///
   /// For legacy transactions and networks which do not support `EIP-1559`, the [FeeData.gasPrice] should be used.
-  Future<FeeData> getFeeData() async =>
-      FeeData._(await call<_FeeDataImpl>('getFeeData'));
+  Future<FeeData> getFeeData() async => FeeData._(await call<_FeeDataImpl>('getFeeData'));
 
   /// Returns the current gas price.
   Future<BigInt> getGasPrice() => call<BigInt>('getGasPrice');
 
   /// Get the lastest [Block] from the network.
-  Future<Block> getLastestBlock() async =>
-      Block._(await call<_BlockImpl>('getBlock', []));
+  Future<Block> getLastestBlock() async => Block._(await call<_BlockImpl>('getBlock', []));
 
   /// Get the lastest [BlockWithTransaction] from the network.
   Future<BlockWithTransaction> getLastestBlockWithTransaction() async =>
-      BlockWithTransaction._(await call<_BlockWithTransactionImpl>(
-          'getBlockWithTransactions', []));
+      BlockWithTransaction._(await call<_BlockWithTransactionImpl>('getBlockWithTransactions', []));
 
   /// Returns the List of [Log] matching the [filter].
   ///
@@ -184,19 +177,14 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   /// print(logs.first is Log); // true
   /// ```
   Future<List<Log>> getLogs(EventFilter filter) async =>
-      (await call<List>('getLogs', [filter.impl]))
-          .cast<_LogImpl>()
-          .map((e) => Log._(e))
-          .toList();
+      (await call<List>('getLogs', [filter.impl])).map((e) => Log(e)).toList();
 
   /// Returns the [Network] that [this] is connected to.
-  Future<Network> getNetwork() async =>
-      Network._(await call<_NetworkImpl>('getNetwork'));
+  Future<Network> getNetwork() async => Network._(await call<_NetworkImpl>('getNetwork'));
 
   /// Returns the `Bytes32` value of the position [pos] at [address], as of the [blockTag].
   Future<String> getStorageAt(String address, int pos, [dynamic blockTag]) =>
-      call<String>('getStorageAt',
-          blockTag == null ? [address, pos] : [address, pos, blockTag]);
+      call<String>('getStorageAt', blockTag == null ? [address, pos] : [address, pos, blockTag]);
 
   /// Returns the [TransactionResponse] with [hash] or `null` if the transaction is unknown.
   ///
@@ -215,16 +203,15 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   /// print(transaction is TransactionResponse); // true
   /// ```
   Future<TransactionResponse?> getTransaction(String hash) async {
-    final response =
-        await call<_TransactionResponseImpl?>('getTransaction', [hash]);
+    final response = await call<_TransactionResponseImpl?>('getTransaction', [hash]);
     if (response != null) return TransactionResponse._(response);
+    return null;
   }
 
   /// Returns the number of transactions [address] has ever sent, as of [blockTag].
   ///
   /// This value is required to be the nonce for the next transaction from address sent to the network.
-  Future<int> getTransactionCount(String address, [dynamic blockTag]) =>
-      call<int>(
+  Future<int> getTransactionCount(String address, [dynamic blockTag]) => call<int>(
         'getTransactionCount',
         blockTag != null ? [address, blockTag] : [address],
       );
@@ -244,21 +231,19 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   /// print(transaction is TransactionReceipt); // true
   /// ```
   Future<TransactionReceipt?> getTransactionReceipt(String hash) async {
-    final receipt =
-        await call<_TransactionReceiptImpl?>('getTransactionReceipt', [hash]);
+    final receipt = await call<_TransactionReceiptImpl?>('getTransactionReceipt', [hash]);
     if (receipt != null) return TransactionReceipt._(receipt);
+    return null;
   }
 
   /// Performs a reverse lookup of the address in ENS using the Reverse Registrar. If the name does not exist, or the forward lookup does not match, `null` is returned.
   ///
   /// An ENS name requries additional configuration to setup a reverse record, they are not automatically set up.
-  Future<String?> lookupAddress(String address) =>
-      call<String?>('lookupAddress', [address]);
+  Future<String?> lookupAddress(String address) => call<String?>('lookupAddress', [address]);
 
   /// Add a [listener] to be triggered for each [event].
   on(dynamic event, Function listener) {
-    assert(event is String || event is _EventFilterImpl,
-        'Event type must be valid.');
+    assert(event is String || event is _EventFilterImpl, 'Event type must be valid.');
     return callMethod(impl, 'on', [
       event is EventFilter ? event.impl : event,
       allowInterop(listener),
@@ -266,13 +251,11 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   }
 
   /// Add a [listener] to be triggered for each new [Block];
-  void onBlock(void Function(int blockNumber) listener) =>
-      on('block', listener);
+  void onBlock(void Function(int blockNumber) listener) => on('block', listener);
 
   /// Add a [listener] to be triggered once for [event].
   once(dynamic event, Function listener) {
-    assert(event is String || event is _EventFilterImpl,
-        'Event type must be valid.');
+    assert(event is String || event is _EventFilterImpl, 'Event type must be valid.');
     return callMethod(impl, 'on', [
       event is EventFilter ? event.impl : event,
       allowInterop(listener),
@@ -280,16 +263,13 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   }
 
   /// Add a [listener] to be triggered once for new [Block];
-  void onceBlock(void Function(int blockNumber) listener) =>
-      on('block', listener);
+  void onceBlock(void Function(int blockNumber) listener) => on('block', listener);
 
   /// Add a [listener] to be triggered once for [filter];
-  void onceFilter(EventFilter filter, Function listener) =>
-      on(filter.impl, listener);
+  void onceFilter(EventFilter filter, Function listener) => on(filter.impl, listener);
 
   /// Add a [listener] to be triggered for [filter];
-  void onFilter(EventFilter filter, Function listener) =>
-      on(filter.impl, listener);
+  void onFilter(EventFilter filter, Function listener) => on(filter.impl, listener);
 
   /// Returns the result of executing the transaction in raw hex string, using either [transactionRequest] or [transactionResponse].
   ///
@@ -323,8 +303,7 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   }
 
   /// Looks up the address of name. If the name is not owned, or does not have a Resolver configured, or the Resolver does not have an address configured, `null` is returned.
-  Future<String?> resolveName(String name) =>
-      call<String?>('resolveName', [name]);
+  Future<String?> resolveName(String name) => call<String?>('resolveName', [name]);
 
   /// Submits transaction [data] to the network to be mined.
   ///
@@ -334,8 +313,7 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
   /// await provider!.sendTransaction("0xf86e808502540be400825208948ba1f109551bd432803012645ac136ddd64dba72880de0b6b3a764000080820a96a0f0c5bcb11e5a16ab116c60a0e5837ae98ec36e7f217740076572e8183002edd2a01ed1b4411c2840b9793e8be5415a554507f1ea320069be6dcecabd7b9097dbd4");
   /// ```
   Future<TransactionResponse> sendTransaction(String data) async =>
-      TransactionResponse._(
-          await call<_TransactionResponseImpl>('sendTransaction', [data]));
+      TransactionResponse._(await call<_TransactionResponseImpl>('sendTransaction', [data]));
 
   /// Returns a Future of [TransactionReceipt] which will not resolve until [transactionHash] is mined.
   ///
@@ -359,9 +337,7 @@ class Provider<T extends _ProviderImpl> extends Interop<T> {
       TransactionReceipt._(
         await call<_TransactionReceiptImpl>(
           'waitForTransaction',
-          timeout != null
-              ? [transactionHash, confirms, timeout.inSeconds]
-              : [transactionHash, confirms],
+          timeout != null ? [transactionHash, confirms, timeout.inSeconds] : [transactionHash, confirms],
         ),
       );
 }
@@ -380,9 +356,7 @@ class Web3Provider extends Provider<_Web3ProviderImpl> {
   /// ```
   factory Web3Provider(dynamic provider) {
     assert(provider != null, 'Provider must not be null.');
-    assert(
-        provider is Interop &&
-            (provider is Ethereum || provider is WalletConnectProvider),
+    assert(provider is Interop && (provider is Ethereum || provider is WalletConnectProvider),
         'Provider type must be valid.');
     return Web3Provider._(
       _Web3ProviderImpl((provider as Interop).impl),
@@ -397,8 +371,7 @@ class Web3Provider extends Provider<_Web3ProviderImpl> {
   /// final web3provider = Web3Provider.fromEthereum(ethereum!);
   /// print(web3provider); // Web3Provider:
   /// ```
-  factory Web3Provider.fromEthereum(Ethereum ethereum) =>
-      Web3Provider._(_Web3ProviderImpl(ethereum.impl));
+  factory Web3Provider.fromEthereum(Ethereum ethereum) => Web3Provider._(_Web3ProviderImpl(ethereum.impl));
 
   /// Create new [Web3Provider] instance from [walletConnect] instance.
   ///

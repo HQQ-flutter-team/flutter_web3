@@ -115,13 +115,11 @@ class TransactionOverride extends Interop<_TransactionOverrideImpl> {
   BigInt? get value => impl.value?.toBigInt;
 
   @override
-  String toString() =>
-      'TransactionOverride: value $value with gas limit $gasLimit and gas price $gasPrice';
+  String toString() => 'TransactionOverride: value $value with gas limit $gasLimit and gas price $gasPrice';
 }
 
 class TransactionReceipt extends Interop<_TransactionReceiptImpl> {
-  const TransactionReceipt._(_TransactionReceiptImpl impl)
-      : super.internal(impl);
+  const TransactionReceipt._(_TransactionReceiptImpl impl) : super.internal(impl);
 
   /// The block hash of the block that this transaction was included in.
   String get blockHash => impl.blockHash;
@@ -155,8 +153,7 @@ class TransactionReceipt extends Interop<_TransactionReceiptImpl> {
   bool get isCreatingContract => to == null;
 
   /// All the logs emitted by this transaction.
-  List<Log> get logs =>
-      impl.logs.cast<_LogImpl>().map((e) => Log._(e)).toList();
+  List<Log> get logs => impl.logs.map((e) => Log(e)).toList();
 
   ///A bloom-filter, which includes all the addresses and topics included in any log in this transaction.
   String get logsBloom => impl.logsBloom;
@@ -225,8 +222,7 @@ class TransactionRequest extends Interop<_TransactionRequestImpl> {
   TransactionRequest._(_TransactionRequestImpl impl) : super.internal(impl);
 
   /// The [AccessList] included in an EIP-2930 or EIP-1559 transaction.
-  AccessList? get accessList =>
-      impl.accessList == null ? null : AccessList._(impl.accessList!);
+  AccessList? get accessList => impl.accessList == null ? null : AccessList._(impl.accessList!);
 
   /// The transaction data.
   String? get data => impl.data;
@@ -268,8 +264,7 @@ class TransactionRequest extends Interop<_TransactionRequestImpl> {
   BigInt? get value => impl.value?.toBigInt;
 
   @override
-  String toString() =>
-      'TransactionRequest: to $to with value $value and data $data';
+  String toString() => 'TransactionRequest: to $to with value $value and data $data';
 }
 
 /// A TransactionResponse includes all properties of a [Transaction] as well as several properties that are useful once it has been mined.
@@ -277,8 +272,7 @@ class TransactionResponse extends Transaction<_TransactionResponseImpl> {
   const TransactionResponse._(_TransactionResponseImpl impl) : super._(impl);
 
   /// The [AccessList] included in an EIP-2930 or EIP-1559 transaction.
-  AccessList? get accessList =>
-      impl.accessList != null ? AccessList._(impl.accessList!) : null;
+  AccessList? get accessList => impl.accessList != null ? AccessList._(impl.accessList!) : null;
 
   /// The hash of the block this transaction was mined in. If the block has not been mined, this is null.
   String? get blockHash => impl.blockHash;
@@ -293,9 +287,8 @@ class TransactionResponse extends Transaction<_TransactionResponseImpl> {
   String? get raw => impl.raw;
 
   /// The timestamp of the block this transaction was mined in. If the block has not been mined, this is null.
-  DateTime? get timestamp => impl.timestamp != null
-      ? DateTime.fromMillisecondsSinceEpoch(impl.timestamp! * 1000)
-      : null;
+  DateTime? get timestamp =>
+      impl.timestamp != null ? DateTime.fromMillisecondsSinceEpoch(impl.timestamp! * 1000) : null;
 
   /// The EIP-2718 type of this transaction envelope, or null for legacy transactions that do not have an envelope.
   int? get type => impl.type;
